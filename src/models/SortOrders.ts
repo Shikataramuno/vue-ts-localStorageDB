@@ -1,26 +1,26 @@
 export default class SortOrders {
   id: number = 1;
-  name: number = 1;
-  address: number = 1;
+  tag: number = 1;
+  todo: number = 1;
   progress: number = 1;
-  admin: number = 1;
+  complete: number = 1;
 
   selectKey(key: string) {
     switch (key) {
       case 'id':
         this.id *= -1;
         break;
-      case 'name':
-        this.name *= -1;
+      case 'tag':
+        this.tag *= -1;
         break;
-      case 'address':
-        this.address *= -1;
+      case 'todo':
+        this.todo *= -1;
+        break;
+      case 'complete':
+        this.complete *= -1;
         break;
       case 'progress':
         this.progress *= -1;
-        break;
-      case 'admin':
-        this.admin *= -1;
         break;
     }
   }

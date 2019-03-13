@@ -3,7 +3,7 @@
     <!-- #### PC用 #### -->
     <div class="pc table-row header">
       <b-row>
-        <label class="title" >メンバ一覧 </label>
+        <label class="title" >やんなきゃリスト </label>
       </b-row>
       <b-row class='query-box'>
         <b-col cols="2">
@@ -25,7 +25,7 @@
     <div class="mobile">
       <b-container class="table-row header">
         <b-row>
-          <label class="title" >メンバ一覧 </label>
+          <label class="title" >やんなきゃリスト</label>
         </b-row>
         <b-row>
           <b-col cols="4">
@@ -47,15 +47,15 @@
     </div>
 
     <div class="data-field">
-      <div v-for="(entry,idx) in members" v-bind:key=idx>
+      <div v-for="(entry,idx) in Todos" v-bind:key=idx>
         <div class="table-row data" v-bind:style="[selectedId===entry.id ? styleForSelectedRow : idx%2 === 0 ? styleForNonSelectedEvenRow : styleForNonSelectedOddRow]" @click="edit(entry.id)">
           <div class="wrapper attributes data">
             <div v-for="(val, idx) in columns" v-bind:key=idx :class="[val]">
               <span class='mobile-title'>{{val}}:</span>
               <b-form-checkbox
-                v-if="val==='admin'"
-                v-model="entry.admin"
-                @change="adminChanged(entry)">
+                v-if="val==='complete'"
+                v-model="entry.complete"
+                @change="completed(entry)">
               </b-form-checkbox>
               <b-progress class="mb-3" v-else-if="val==='progress'" :max="max" :value="entry.progress" show-value variant="success"/>
               <span v-else>{{entry[val]}}</span>
@@ -69,19 +69,19 @@
 
 <script lang='ts'>
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import Member from '../models/Member';
-import MemberList from '../models/MemberList';
+import Todo from '../models/Todo';
+import Todos from '../models/Todos';
 import SortOrders from '../models/SortOrders';
 
 @Component
-export default class ResponsiveScrollableGrid extends Vue {
-  name: string = 'ResponsiveScrollableGrid';
+export default class TodoList extends Vue {
+  name: string = 'TodoList';
   userName: string = 'admin';
   searchQuery: string = '';
   sortKey: string = 'キー';
-  memberList: Member[] = [];
+  todos: Todo[] = [];
   max: number = 100;
-  columns: string[] = ['id', 'name', 'admin', 'address', 'progress'];
+  columns: string[] = ['id', 'tag', 'todo', 'complete', 'progress'];
   sortOrders: SortOrders = new SortOrders();
   selectedId: number = -1;
   styleForSelectedRow: object = {'background-color': '#C0C0C0'};
@@ -89,16 +89,16 @@ export default class ResponsiveScrollableGrid extends Vue {
   styleForNonSelectedOddRow: object = {'background-color': '#F5F5F5'};
 
   // computed
-  get members(): Member[] {
-    let ret = this.memberList;
-    const filterKey = this.searchQuery && this.searchQuery.toLowerCase();
+  get Todos(): Todo[] {
+    let ret: Todo[] = this.todos;
+    const filterKey: string = this.searchQuery && this.searchQuery.toLowerCase();
     if (filterKey) {
-      ret = ret.filter((row) => {
+      ret = ret.filter((row: Todo) => {
         return row.isIncluded(filterKey);
       });
     }
     const order = this.sortOrders.getOrder(this.sortKey) || -1;
-    ret = ret.slice().sort((a: Member, b: Member) => {
+    ret = ret.slice().sort((a: Todo, b: Todo) => {
       const aVal: string = a.getValue(this.sortKey);
       const bVal: string = b.getValue(this.sortKey);
       return (aVal === bVal ? 0 : aVal > bVal ? 1 : -1) * order;
@@ -108,7 +108,8 @@ export default class ResponsiveScrollableGrid extends Vue {
 
   created(): void {
     console.log('created');
-    this.memberList = MemberList.getInstance().getMembers();
+    this.todos = Todos.getInstance().getTodos();
+    console.log(this.todos);
   }
   mounted(): void {
     console.log('mounted');
@@ -121,10 +122,11 @@ export default class ResponsiveScrollableGrid extends Vue {
   edit(id: number): void {
     this.selectedId = id;
   }
-  adminChanged(member: Member): void {
+
+  completed(todo: Todo): void {
     this.$nextTick(() => {
       console.log('adminChanged');
-      console.log(member);
+      console.log(todo);
     });
   }
 }
@@ -228,7 +230,7 @@ export default class ResponsiveScrollableGrid extends Vue {
   text-overflow: ellipsis;
   text-align: left;
 }
-.admin {
+.complete {
   width: 200px;
   text-align: left;
 }
@@ -238,14 +240,14 @@ export default class ResponsiveScrollableGrid extends Vue {
 .progress {
   width: 200px;
 }
-.name {
+.tag {
   width: 200px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left;
 }
-.address {
+.todo {
   width: 300px;
   overflow: hidden;
   white-space: nowrap;

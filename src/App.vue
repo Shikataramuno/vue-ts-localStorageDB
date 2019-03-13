@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <ResponsiveScrollableGrid/>
+    <TodoList/>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import ResponsiveScrollableGrid from './components/ResponsiveScrollableGrid.vue';
+import TodoList from './components/TodoList.vue';
 
 @Component({
   components: {
-    ResponsiveScrollableGrid,
+    TodoList,
   },
 })
 export default class App extends Vue {}

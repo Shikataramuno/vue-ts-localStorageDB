@@ -1,27 +1,26 @@
-export default class Member {
+export default class Todo {
   id: number = -1;
-  name: string = '';
-  address: string = '';
-  admin: boolean = false;
+  tag: string = '';
+  todo: string = '';
+  complete: boolean = false;
   progress: number = 0;
 
   constructor(
     id: number,
-    name: string,
-    admin: boolean,
-    progress: number,
-    address: string) {
+    tag: string,
+    todo: string,
+    complete: boolean,
+    progress: number) {
       this.id = id;
-      this.name = name;
-      this.admin = admin;
-      this.address = address;
+      this.tag = tag;
+      this.todo = todo;
+      this.complete = complete;
       this.progress = progress;
   }
 
   isIncluded(str: string): boolean {
-    return String(this.id).toLowerCase().indexOf(str) > -1 ||
-     this.name.toLowerCase().indexOf(str) > -1 ||
-     this.address.toLowerCase().indexOf(str) > -1;
+    return this.todo.indexOf(str) > -1 ||
+     this.tag.indexOf(str) > -1;
   }
 
   getValue(key: string): string {

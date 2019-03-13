@@ -5,12 +5,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import './registerServiceWorker';
 
-import MemberList from './models/MemberList';
+import Todos from './models/Todos';
 
 Vue.use(BootstrapVue);
 Vue.config.productionTip = false;
 
-const members: MemberList = MemberList.getInstance();
+const todos: Todos = Todos.getInstance();
 
 new Vue({
   render: (h) => h(App),

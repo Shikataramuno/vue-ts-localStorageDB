@@ -196,6 +196,7 @@ export default class TodoList extends Vue {
 }
 .title {
   float: left;
+  text-align: left;
   color:  rgb(26, 92, 0);
 }
 .filter, .edit-tag, .edit-todo {

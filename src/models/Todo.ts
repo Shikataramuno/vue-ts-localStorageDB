@@ -3,19 +3,16 @@ export default class Todo {
   tag: string = '';
   todo: string = '';
   complete: boolean = false;
-  progress: number = 0;
 
   constructor(
     id: number,
     tag: string,
     todo: string,
-    complete: boolean,
-    progress: number) {
+    complete: boolean) {
       this.id = id;
       this.tag = tag;
       this.todo = todo;
       this.complete = complete;
-      this.progress = progress;
   }
 
   isIncluded(str: string): boolean {

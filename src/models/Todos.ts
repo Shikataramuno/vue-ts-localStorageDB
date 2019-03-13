@@ -24,14 +24,14 @@ export default class Todos {
     if ('Todos' in localStorage) {
       const objs: Todo[] = JSON.parse(localStorage.getItem('Todos') as string) as Todo[];
       objs.forEach((obj: Todo) => {
-        const todo: Todo = new Todo(obj.id, obj.tag, obj.todo, obj.complete, obj.progress);
+        const todo: Todo = new Todo(obj.id, obj.tag, obj.todo, obj.complete);
         this.todos.push(todo);
       });
     } else {
       this.todos = [
-        new Todo(1, '仕事', 'レポートを書く', false, 10),
-        new Todo(2, 'トレーニング', 'スクワット：30回、腹筋：20回、腕立て：10回を 3セット', false, 10),
-        new Todo(3, 'ブログ', 'local storageの記事を書く', false, 10),
+        new Todo(1, '仕事', 'レポートを書く', false),
+        new Todo(2, 'トレーニング', 'スクワット：30回、腹筋：20回、腕立て：10回を 3セット', false),
+        new Todo(3, 'ブログ', 'local storageの記事を書く', false),
       ];
       localStorage.setItem('Todos', JSON.stringify(this.todos));
     }

@@ -2,16 +2,37 @@
   <div class="container-fluid">
     <!-- #### PC用 #### -->
     <div class="pc table-row header">
-      <b-row>
-        <label class="title" >やんなきゃリスト </label>
-      </b-row>
-      <b-row class='query-box'>
+      <b-row class="edit-box">
         <b-col cols="2">
-          <form id="search">
-            <input name="query" class="filter" v-model="searchQuery" placeholder="フィルタ文字列">
+          <label class="title" >新「やらなぁ~ あかんこと」 </label>
+        </b-col>
+        <b-col cols="2">
+          <form id="tag">
+            <input type="text" class="edit-tag" v-model="tag" placeholder="タグ">
           </form>
         </b-col>
-        <b-col cols="10">
+        <b-col cols="2">
+          <form id="todo">
+            <input type="text" class="edit-todo" v-model="todo" placeholder="やらなぁ~ あかんこと">
+          </form>
+        </b-col>
+        <b-col cols="2">
+          <b-button class="control-button add" variant="success" @click="addTodo">登録</b-button>
+        </b-col>
+        <b-col cols="4">
+        </b-col>
+      </b-row>
+      <div class="sepalator"></div>
+      <b-row class='query-box'>
+        <b-col cols="2">
+          <label class="title" >やらなぁ~ あかんの「リスト」 </label>
+        </b-col>
+        <b-col cols="2">
+          <form id="search">
+            <input type="text" class="filter" v-model="searchQuery" placeholder="フィルタ">
+          </form>
+        </b-col>
+        <b-col cols="8">
         </b-col>
       </b-row>
       <div class="wrapper attributes header">
@@ -57,7 +78,6 @@
                 v-model="entry.complete"
                 @change="completed(entry)">
               </b-form-checkbox>
-              <b-progress class="mb-3" v-else-if="val==='progress'" :max="max" :value="entry.progress" show-value variant="success"/>
               <span v-else>{{entry[val]}}</span>
             </div>
           </div>
@@ -81,12 +101,14 @@ export default class TodoList extends Vue {
   sortKey: string = 'キー';
   todos: Todo[] = [];
   max: number = 100;
-  columns: string[] = ['id', 'tag', 'todo', 'complete', 'progress'];
+  columns: string[] = ['id', 'tag', 'todo', 'complete'];
   sortOrders: SortOrders = new SortOrders();
   selectedId: number = -1;
   styleForSelectedRow: object = {'background-color': '#C0C0C0'};
   styleForNonSelectedEvenRow: object = {'background-color': '#FFFFFF'};
   styleForNonSelectedOddRow: object = {'background-color': '#F5F5F5'};
+  tag: string = '';
+  todo: string = '';
 
   // computed
   get Todos(): Todo[] {
@@ -121,6 +143,9 @@ export default class TodoList extends Vue {
   }
   edit(id: number): void {
     this.selectedId = id;
+  }
+  addTodo(): void {
+    console.log('addTag tag: ' + this.tag + ', todo : ' + this.todo);
   }
 
   completed(todo: Todo): void {
@@ -164,16 +189,21 @@ export default class TodoList extends Vue {
 .row {
   margin-left: 0px;
 }
-.title {
-  font-size: small;
-  color:  rgb(26, 92, 0);
-  margin-left: 1em;
+.control-button {
+  float: left;
+  line-height: 1em;
+  margin-bottom: 4px;
 }
-.filter {
+.title {
+  float: left;
+  color:  rgb(26, 92, 0);
+}
+.filter, .edit-tag, .edit-todo {
   width: 100%;
+  margin-bottom: auto;
 }
 .query-box {
-  margin-bottom: 1em
+  margin-top: 1em;
 }
 .wrapper {
   display: flex;
@@ -187,6 +217,7 @@ export default class TodoList extends Vue {
 }
 .wrapper.attributes.header {
   height: 20px;
+  margin-top: 1em;
 }
 
 .data-field {
@@ -199,7 +230,8 @@ export default class TodoList extends Vue {
   box-shadow: 2px 2px 10px rgba(63, 63, 63, 0.2);
 }
 .sepalator {
-  height: 10px;
+  height: 1px;
+  border:rgba(63, 63, 63, 0.1) solid 1px;
 }
 .detail-field {
   height: 100px;
@@ -232,7 +264,7 @@ export default class TodoList extends Vue {
 }
 .complete {
   width: 200px;
-  text-align: left;
+  text-align: center;
 }
 .header.progress {
   background-color: rgb(229, 255, 219);
@@ -248,7 +280,7 @@ export default class TodoList extends Vue {
   text-align: left;
 }
 .todo {
-  width: 300px;
+  width: 50%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;

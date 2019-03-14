@@ -1,5 +1,7 @@
 import Todo from './Todo';
 
+const ToDosKeyWord: string = 'Todos';
+const IdKeyWord: string = 'id';
 export default class Todos {
 
   static getInstance(): Todos {
@@ -13,39 +15,50 @@ export default class Todos {
 
   private static instance: Todos;
   private todos: Todo[] = [];
+  private id: number = 1;
 
   constructor() {
     console.log('Todos class constructor');
-    /*
-     * ここに　LocalStorageからの読み込みを実装する。
-     */
-    // localStorage.setItem('user', JSON.stringify(user))
-    // localStorage.setItem('userInfo', JSON.stringify(res.data))
-    if ('Todos' in localStorage) {
-      const objs: Todo[] = JSON.parse(localStorage.getItem('Todos') as string) as Todo[];
+    if (IdKeyWord in localStorage) {
+      this.id = JSON.parse(localStorage.getItem(IdKeyWord) as string) as number;
+    } else {
+      localStorage.setItem(IdKeyWord, JSON.stringify(this.id));
+    }
+    if (ToDosKeyWord in localStorage) {
+      const objs: Todo[] = JSON.parse(localStorage.getItem(ToDosKeyWord) as string) as Todo[];
       objs.forEach((obj: Todo) => {
         const todo: Todo = new Todo(obj.id, obj.tag, obj.todo, obj.complete);
         this.todos.push(todo);
       });
     } else {
-      this.todos = [
-        new Todo(1, '仕事', 'レポートを書く', false),
-        new Todo(2, 'トレーニング', 'スクワット：30回、腹筋：20回、腕立て：10回を 3セット', false),
-        new Todo(3, 'ブログ', 'local storageの記事を書く', false),
-      ];
-      localStorage.setItem('Todos', JSON.stringify(this.todos));
+      localStorage.setItem(ToDosKeyWord, JSON.stringify(this.todos));
     }
-    console.log(this.todos);
   }
 
   getTodos(): Todo[] {
     return this.todos.slice();
   }
 
+  update(todo: Todo): void {
+    const index: number = this.todos.findIndex((td: Todo) => {
+      return td.id === todo.id;
+    });
+    this.todos[index] = todo;
+    localStorage.setItem(ToDosKeyWord, JSON.stringify(this.todos));
+  }
+
   addTodo(todo: Todo): void {
+    todo.id = this.id;
     this.todos.push(todo);
-    /*
-     * ここに LocalStorage への追加を実装する
-     */
+    localStorage.setItem(ToDosKeyWord, JSON.stringify(this.todos));
+    this.id++;
+    localStorage.setItem(IdKeyWord, JSON.stringify(this.id));
+  }
+
+  delete(target: Todo): void {
+    this.todos = this.todos.filter((todo: Todo) => {
+      return todo.id !== target.id;
+    });
+    localStorage.setItem(ToDosKeyWord, JSON.stringify(this.todos));
   }
 }

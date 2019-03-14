@@ -20,6 +20,9 @@ export default class Todo {
      this.tag.indexOf(str) > -1;
   }
 
+  isComplete(): boolean {
+    return this.complete;
+  }
   getValue(key: string): string {
     /*
     let str: string = '';

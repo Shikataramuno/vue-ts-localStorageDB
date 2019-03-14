@@ -1,90 +1,131 @@
 <template>
-  <div class="container-fluid">
+  <div class="content">
     <!-- #### PC用 #### -->
-    <b-row class="edit-box">
-      <b-col cols="3">
-        <label class="title" >新「やらなぁ~ あかんこと」 </label>
-      </b-col>
-      <b-col cols="2">
-        <form id="tag">
-          <input type="text" class="edit-tag" v-model="tag" placeholder="タグ">
-        </form>
-      </b-col>
-      <b-col cols="2">
-        <form id="todo">
-          <input type="text" class="edit-todo" v-model="todo" placeholder="やらなぁ~ あかんこと">
-        </form>
-      </b-col>
-      <b-col cols="2">
-        <b-button class="control-button add" variant="success" @click="addTodo">登録</b-button>
-      </b-col>
-      <b-col cols="2">
-        <b-button class="control-button add" variant="success" @click="delComplete">完了削除</b-button>
-      </b-col>
-      <b-col cols="1">
-      </b-col>
-    </b-row>
-    <b-row class='query-box'>
-      <b-col cols="3">
-        <label class="title" >やらなぁ~ あかんの「リスト」 </label>
-      </b-col>
-      <b-col cols="2">
-        <form id="search">
-          <input type="text" class="filter" v-model="searchQuery" placeholder="フィルタ">
-        </form>
-      </b-col>
-      <b-col cols="7">
-      </b-col>
-    </b-row>
-    <div class="pc table-row header">
-      <div class="wrapper attributes header">
-        <div v-for="(val, idx) in columns" v-bind:key=idx @click="sortBy(val)" :class="[{ active: sortKey === val }, val, 'header']">
-          <span v-if="val==='id'">ID</span>
-          <span v-else-if="val==='tag'">タグ</span>
-          <span v-else-if="val==='todo'">やらなぁ~あかんこと</span>
-          <span v-else>完了（✓）</span>
-          <span class="arrow" :class="sortOrders[val] > 0 ? 'asc' : 'dsc'"></span>
+    <div class="pc">
+      <b-row class="edit-box">
+        <b-col cols="3">
+          <label class="title" >新「やらなぁ~ あかんこと」 </label>
+        </b-col>
+        <b-col cols="2">
+          <form id="tag">
+            <input type="text" class="edit-tag" v-model="tag" placeholder="タグ">
+          </form>
+        </b-col>
+        <b-col cols="2">
+          <form id="todo">
+            <input type="text" class="edit-todo" v-model="todo" placeholder="やらなぁ~ あかんこと">
+          </form>
+        </b-col>
+        <b-col cols="2">
+          <b-button class="add-button" variant="success" @click="addTodo">登録</b-button>
+        </b-col>
+        <b-col cols="3">
+        </b-col>
+      </b-row>
+      <b-row class='query-box'>
+        <b-col cols="3">
+          <label class="title" >やらなぁ~ あかんことの「フィルタ」</label>
+        </b-col>
+        <b-col cols="2">
+          <form id="search">
+            <input type="text" class="filter" v-model="searchQuery" placeholder="フィルタ">
+          </form>
+        </b-col>
+        <b-col cols="7">
+        </b-col>
+      </b-row>
+      <div class="table-row header">
+        <div class="wrapper attributes header">
+          <div v-for="(val, idx) in columns" v-bind:key=idx @click="sortBy(val)" :class="[{ active: sortKey === val }, val, 'header']">
+            <span v-if="val==='id'">ID</span>
+            <span v-else-if="val==='tag'">タグ</span>
+            <span v-else-if="val==='todo'">やらなぁ~あかんこと</span>
+            <span v-else-if="val==='complete'">完了（✓）</span>
+            <span v-else>削除</span>
+            <span class="arrow" :class="sortOrders[val] > 0 ? 'asc' : 'dsc'"></span>
+          </div>
         </div>
       </div>
     </div>
     <!-- #### スマホ用 #### -->
     <div class="mobile">
+      <b-row class="edit-box">
+        <label class="title" >新「やらなぁ~ あかんこと」 </label>
+        <input type="text" class="edit-tag" v-model="tag" placeholder="タグ">
+        <input type="text" class="edit-todo" v-model="todo" placeholder="やらなぁ~ あかんこと">
+        <div class="edit-button">
+          <b-button class="add-button" variant="success" @click="addTodo">登録</b-button>
+        </div>
+      </b-row>
+      <div class="sepalator"></div>
+      <b-row class='query-box'>
+        <label class="title" >やらなぁ~ あかんことの「フィルタ」</label>
+        <input name="query" class="filter" v-model="searchQuery" placeholder="フィルタ文字列">
+      </b-row>
+      <div class="sepalator"></div>
       <b-container class="table-row header">
-        <b-row>
-          <label class="title" >やんなきゃリスト</label>
-        </b-row>
-        <b-row>
-          <b-col cols="4">
-            <input name="query" class="filter" v-model="searchQuery" placeholder="フィルタ文字列">
-          </b-col>
-          <b-col cols="4">
-            <b-dropdown id="ddown-buttons" split right variant="success" size="sm" class="sorter">
-              <template slot="button-content">
-                {{sortKey}}
-                <span class="arrow" :class="sortOrders[sortKey] > 0 ? 'asc' : 'dsc'"></span>
-              </template>
-              <b-dropdown-item v-for="(val, idx) in columns" v-bind:key=idx @click="sortBy(val)" :class="[{ active: sortKey == val }, { focus: sortKey == val }]">
-                {{ val }}
-              </b-dropdown-item>
-            </b-dropdown>
-          </b-col>
-        </b-row>
+        <label class="title" >やらなぁ~ あかんことの「リスト」</label>
+        <b-dropdown id="ddown-buttons"
+          split right variant="success"
+          size="sm"
+          class="sorter">
+          <template slot="button-content">
+            <span v-if="sortKey==='id'">ID</span>
+            <span v-else-if="sortKey==='tag'">タグ</span>
+            <span v-else-if="sortKey==='todo'">やらなぁ~あかんこと</span>
+            <span v-else>完了（✓）</span>
+            <span class="arrow" :class="sortOrders[sortKey] > 0 ? 'asc' : 'dsc'"></span>
+          </template>
+          <b-dropdown-item
+            v-for="(val, idx) in columns"
+            v-bind:key=idx
+            @click="sortBy(val)"
+            :class="[{ active: sortKey === val }, { focus: sortKey == val }]">
+            <span v-if="val==='id'">ID</span>
+            <span v-else-if="val==='tag'">タグ</span>
+            <span v-else-if="val==='todo'">やらなぁ~あかんこと</span>
+            <span v-else-if="val==='complete'">完了（✓）</span>
+          </b-dropdown-item>
+        </b-dropdown>
       </b-container>
     </div>
 
     <!-- #### PC・スマホ　共通 #### -->
     <div class="data-field">
-      <div v-for="(entry,idx) in Todos" v-bind:key=idx>
-        <div class="table-row data" v-bind:style="[selectedId===entry.id ? styleForSelectedRow : idx%2 === 0 ? styleForNonSelectedEvenRow : styleForNonSelectedOddRow]" @click="edit(entry.id)">
+      <div v-for="(todo,idx) in Todos" v-bind:key=idx>
+        <div class="table-row data"
+          v-bind:style="[selectedId===todo.id ? styleForSelectedRow : idx%2 === 0 ? styleForNonSelectedEvenRow : styleForNonSelectedOddRow]"
+          @click="edit(todo.id)">
           <div class="wrapper attributes data">
             <div v-for="(val, idx) in columns" v-bind:key=idx :class="[val]">
-              <span class='mobile-title'>{{val}}:</span>
-              <b-form-checkbox
-                v-if="val==='complete'"
-                v-model="entry.complete"
-                @change="completed(entry)">
-              </b-form-checkbox>
-              <span v-else>{{entry[val]}}</span>
+              <span class='mobile-title' v-if="val==='id'">【ID】</span>
+              <span class='mobile-title' v-else-if="val==='tag'">【タグ】</span>
+              <span class='mobile-title' v-else-if="val==='todo'">【やらなぁ~あかんこと】<br></span>
+              <span class='mobile-title' v-else-if="val==='complete'">【完了（✓）】</span>
+              <span class='mobile-title' v-else>【削除】</span>
+
+              <span v-if="val==='complete'"
+                class="complete-checkbox-span">
+                <b-form-checkbox
+                  v-model="todo.complete"
+                  @change="completed(todo)">
+                </b-form-checkbox>
+              </span>
+              <span v-else-if="val==='delete'"
+                class="delete-button-span">
+                <b-button
+                  class="delete-button"
+                  variant="success"
+                  @click="delComplete(todo)">
+                    削除
+                </b-button>
+              </span>
+              <span v-else
+                class="content"
+                :class="[val]">
+                  {{todo[val]}}
+              </span>
+
             </div>
           </div>
         </div>
@@ -102,21 +143,23 @@ import SortOrders from '../models/SortOrders';
 @Component
 export default class TodoList extends Vue {
   name: string = 'TodoList';
-  searchQuery: string = '';
-  sortKey: string = 'キー';
-  todos: Todo[] = [];
-  columns: string[] = ['id', 'tag', 'todo', 'complete'];
-  sortOrders: SortOrders = new SortOrders();
-  selectedId: number = -1;
+  columns: string[] = ['id', 'tag', 'todo', 'complete', 'delete'];
   styleForSelectedRow: object = {'background-color': '#C0C0C0'};
   styleForNonSelectedEvenRow: object = {'background-color': '#FFFFFF'};
   styleForNonSelectedOddRow: object = {'background-color': '#F5F5F5'};
+
+  sortOrders: SortOrders = new SortOrders();
+  todos: Todos = Todos.getInstance();
+
+  searchQuery: string = '';
+  sortKey: string = 'キー';
+  selectedId: number = -1;
   tag: string = '';
   todo: string = '';
 
   // computed
   get Todos(): Todo[] {
-    let ret: Todo[] = this.todos;
+    let ret: Todo[] = this.todos.getTodos();
     const filterKey: string = this.searchQuery && this.searchQuery.toLowerCase();
     if (filterKey) {
       ret = ret.filter((row: Todo) => {
@@ -132,14 +175,6 @@ export default class TodoList extends Vue {
     return ret;
   }
 
-  created(): void {
-    this.readTodos();
-    console.log(this.todos);
-  }
-
-  readTodos(): void {
-    this.todos = Todos.getInstance().getTodos();
-  }
   sortBy(key: string): void {
     this.sortKey = key;
     this.sortOrders.selectKey(this.sortKey);
@@ -148,21 +183,16 @@ export default class TodoList extends Vue {
     this.selectedId = id;
   }
   addTodo(): void {
-    Todos.getInstance().addTodo( new Todo(0, this.tag, this.todo, false));
-    this.readTodos();
+    this.todos.addTodo( new Todo(0, this.tag, this.todo, false));
+    this.tag = this.todo = '';
   }
-  delComplete(): void {
-    this.todos.forEach((todo: Todo) => {
-      if (todo.isComplete()) {
-        Todos.getInstance().delete(todo);
-      }
-    });
-    this.readTodos();
+  delComplete(target: Todo): void {
+    console.log('delComplete');
+    this.todos.delete(target);
   }
   completed(todo: Todo): void {
     this.$nextTick(() => {
-      Todos.getInstance().update(todo);
-      this.readTodos();
+      this.todos.update(todo);
     });
   }
 }
@@ -170,7 +200,7 @@ export default class TodoList extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.container-fluid{
+.coontent{
   width: 80%;
   height: 100%;
   padding: 5px;
@@ -185,6 +215,10 @@ export default class TodoList extends Vue {
   font-weight: bold;
   display: none;
 }
+.query-box, .edit-box {
+  height: auto;
+  margin: 4px 0px;
+}
 .table-row {
   border-bottom: 1px solid #e0e0e0;
   border-collapse: collapse;
@@ -192,6 +226,7 @@ export default class TodoList extends Vue {
   margin-right: auto;
 }
 .table-row.header {
+  height: auto;
   background-color: rgb(229, 255, 219);
   font-weight: bold;
   padding-top: 6px;
@@ -201,7 +236,7 @@ export default class TodoList extends Vue {
 .row {
   margin-left: 0px;
 }
-.control-button {
+.add-button {
   float: left;
   line-height: 1em;
   margin-bottom: 4px;
@@ -218,9 +253,6 @@ export default class TodoList extends Vue {
   width: 100%;
   margin-bottom: auto;
 }
-.query-box {
-  margin: 1em 0em;
-}
 .wrapper {
   display: flex;
   display: -webkit-flex;
@@ -234,24 +266,12 @@ export default class TodoList extends Vue {
 .wrapper.attributes.header {
   line-height: 1.5em;
 }
-
+/* data-field */
 .data-field {
   height: 80vh;
-  resize: vertical;
-  overflow-y: auto;
+  overflow-y: scroll;
   min-height: 100px;
   max-height: 1000px;
-  border:rgba(63, 63, 63, 0.1) solid 1px;
-  box-shadow: 2px 2px 10px rgba(63, 63, 63, 0.2);
-}
-.sepalator {
-  height: 1px;
-  border:rgba(63, 63, 63, 0.1) solid 1px;
-}
-.detail-field {
-  height: 100px;
-  resize: vertical;
-  overflow-y: auto;
   border:rgba(63, 63, 63, 0.1) solid 1px;
   box-shadow: 2px 2px 10px rgba(63, 63, 63, 0.2);
 }
@@ -267,6 +287,7 @@ export default class TodoList extends Vue {
   margin-right: 0px;
   padding-top: 6px;
 }
+/* column items */
 .mobile-title {
   display: none;
 }
@@ -276,16 +297,6 @@ export default class TodoList extends Vue {
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left;
-}
-.complete {
-  width: 200px;
-  text-align: center;
-}
-.header.progress {
-  background-color: rgb(229, 255, 219);
-}
-.progress {
-  width: 200px;
 }
 .tag {
   width: 200px;
@@ -301,41 +312,77 @@ export default class TodoList extends Vue {
   text-overflow: ellipsis;
   text-align: left;
 }
+.complete {
+  width: 200px;
+  text-align: center;
+}
+.delete {
+  width: 200px;
+  margin: auto;
+}
+.delete-button {
+  line-height: 1em;
+  margin: 0 auto;
+  margin-bottom: 4px;
+}
 /*
  * Media queries: optimize for different screen widths.
  */
-@media screen and (max-device-width: 768px),screen and (max-width: 768px)
-{
-  .container {
-    padding-left: 4px;
+@media only screen 
+    and (device-width : 375px) 
+    and (device-height : 812px) 
+    and (-webkit-device-pixel-ratio : 3) {
+
+  .content{
+    width: 100%;
+    height: 600px;
+    padding: 5px;
+    overflow-y: auto;
   }
   .pc {
     font-size: 80%;
     font-weight: bold;
     display: none;
+    overflow-y: hidden;
   }
   .mobile {
+    height: auto;
     font-size: 80%;
     font-weight: bold;
-    display: inline;
+    display: block;
+    overflow-y: hidden;
   }
   .wrapper.attributes.header {
     height: auto;
   }
+  .sepalator {
+    height: 1px;
+    border:rgba(63, 63, 63, 0.1) solid 1px;
+  }
+  .edit-tag, .edit-todo {
+    margin: 4px;
+  }
+  .edit-button {
+    width: 100%;
+    margin: 4px;
+  }
+  .add-button {
+    float: right;
+    line-height: 1em;
+    margin: 4px;
+  }
+  .title {
+    float: left;
+    text-align: left;
+  }
   .filter {
     width: 100%;
-    font-size: 16px;
-    /* transform: scale(0.8); */
   }
   .sorter {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translateY(-50%) translateX(-50%);
-    -webkit-transform: translateY(-50%) translateX(-50%);
-    /* float: right; */
+    width: 100%;
   }
   .dropdown .dropdown-menu .dropdown-item:focus {
+    width: 60%;
     outline: none;
     /*
     background-color: #eaeaea;
@@ -344,7 +391,7 @@ export default class TodoList extends Vue {
   }
   .data-field {
     height: 600px;
-    overflow-y: auto;
+    overflow-y: scroll;
   }
   .wrapper.attributes.data {
     height: auto;
@@ -362,6 +409,54 @@ export default class TodoList extends Vue {
   }
   .attributes > div {
     width: 100%;
+  }
+  .id {
+    width: 100px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+  }
+  .tag {
+    width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: left;
+  }
+  .todo {
+    width: 50%;
+    /*
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    */
+    text-align: left;
+    word-break : break-all;
+  }
+  .content.todo, .content.tag {
+    word-wrap: break-word;
+    white-space: normal;
+    color:blue;
+  }  
+  .complete {
+    display: flex;
+    width: 200px;
+    text-align: left;
+  }
+  .complete-checkbox-span {
+    margin-left: 4px;
+  }
+  .delete {
+    width: 200px;
+    text-align: left;
+  }
+  .delete-button {
+    line-height: 1em;
+    margin-left: 4px;
+  }
+  .delete-button-span {
+    margin-left: 4px;
   }
 }
 /*

@@ -1,10 +1,10 @@
 <template>
-  <div class="content">
+  <div class="todo-view">
     <!-- #### PC用 #### -->
     <div class="pc">
       <b-row class="edit-box">
         <b-col cols="3">
-          <label class="title" >新「やらなぁ~ あかんこと」 </label>
+          <label class="title" >「やらなぁ~ あかんこと」を追加 </label>
         </b-col>
         <b-col cols="2">
           <form id="tag">
@@ -17,14 +17,14 @@
           </form>
         </b-col>
         <b-col cols="2">
-          <b-button class="add-button" variant="success" @click="addTodo">登録</b-button>
+          <b-button class="add-button" variant="success" @click="addTodo">追加</b-button>
         </b-col>
         <b-col cols="3">
         </b-col>
       </b-row>
       <b-row class='query-box'>
         <b-col cols="3">
-          <label class="title" >やらなぁ~ あかんことの「フィルタ」</label>
+          <label class="title" >「やらなぁ~ あかんこと」を検索</label>
         </b-col>
         <b-col cols="2">
           <form id="search">
@@ -50,21 +50,21 @@
     <!-- #### スマホ用 #### -->
     <div class="mobile">
       <b-row class="edit-box">
-        <label class="title" >新「やらなぁ~ あかんこと」 </label>
+        <label class="title" >「やらなぁ~ あかんこと」を追加 </label>
         <input type="text" class="edit-tag" v-model="tag" placeholder="タグ">
         <input type="text" class="edit-todo" v-model="todo" placeholder="やらなぁ~ あかんこと">
         <div class="edit-button">
-          <b-button class="add-button" variant="success" @click="addTodo">登録</b-button>
+          <b-button class="add-button" variant="success" @click="addTodo">追加</b-button>
         </div>
       </b-row>
       <div class="sepalator"></div>
       <b-row class='query-box'>
-        <label class="title" >やらなぁ~ あかんことの「フィルタ」</label>
+        <label class="title" >「やらなぁ~ あかんこと」を検索</label>
         <input name="query" class="filter" v-model="searchQuery" placeholder="フィルタ文字列">
       </b-row>
       <div class="sepalator"></div>
       <b-container class="table-row header">
-        <label class="title" >やらなぁ~ あかんことの「リスト」</label>
+        <label class="title" >「やらなぁ~ あかんこと」の一覧</label>
         <b-dropdown id="ddown-buttons"
           split right variant="success"
           size="sm"
@@ -200,10 +200,11 @@ export default class TodoList extends Vue {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.coontent{
+.todo-view{
   width: 80%;
   height: 100%;
   padding: 5px;
+  margin: 0 auto;
 }
 .pc {
   font-size: 80%;
@@ -252,6 +253,7 @@ export default class TodoList extends Vue {
 .filter, .edit-tag, .edit-todo {
   width: 100%;
   margin-bottom: auto;
+  font-size: medium;
 }
 .wrapper {
   display: flex;
@@ -268,7 +270,7 @@ export default class TodoList extends Vue {
 }
 /* data-field */
 .data-field {
-  height: 80vh;
+  height: 600px;
   overflow-y: scroll;
   min-height: 100px;
   max-height: 1000px;
@@ -297,6 +299,7 @@ export default class TodoList extends Vue {
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left;
+  vertical-align: middle;
 }
 .tag {
   width: 200px;
@@ -304,13 +307,12 @@ export default class TodoList extends Vue {
   white-space: nowrap;
   text-overflow: ellipsis;
   text-align: left;
+  vertical-align: middle;
 }
 .todo {
   width: 50%;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   text-align: left;
+  word-break : break-all;
 }
 .complete {
   width: 200px;
@@ -318,7 +320,7 @@ export default class TodoList extends Vue {
 }
 .delete {
   width: 200px;
-  margin: auto;
+  margin: 0 auto;
 }
 .delete-button {
   line-height: 1em;
@@ -333,31 +335,37 @@ export default class TodoList extends Vue {
     and (device-height : 812px) 
     and (-webkit-device-pixel-ratio : 3) {
 
-  .content{
+  .todo-view{
     width: 100%;
-    height: 600px;
+    height: 100%;
     padding: 5px;
-    overflow-y: auto;
+    overflow: hidden;
   }
   .pc {
     font-size: 80%;
     font-weight: bold;
     display: none;
-    overflow-y: hidden;
   }
   .mobile {
-    height: auto;
+    height: 296px;
     font-size: 80%;
     font-weight: bold;
     display: block;
-    overflow-y: hidden;
   }
-  .wrapper.attributes.header {
-    height: auto;
+  .edit-box {
+    height: 152px;
+    margin: 4px 0px;
+  }
+  .query-box {
+    height: 52px;
+    margin: 4px 0px;
   }
   .sepalator {
     height: 1px;
     border:rgba(63, 63, 63, 0.1) solid 1px;
+  }
+  .table-row.header {
+    height: 70px;
   }
   .edit-tag, .edit-todo {
     margin: 4px;
@@ -384,14 +392,12 @@ export default class TodoList extends Vue {
   .dropdown .dropdown-menu .dropdown-item:focus {
     width: 60%;
     outline: none;
-    /*
-    background-color: #eaeaea;
-    color: #1d1e1f;
-    */
   }
+  /* */
   .data-field {
-    height: 600px;
-    overflow-y: scroll;
+    height: 500px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
   .wrapper.attributes.data {
     height: auto;
@@ -426,11 +432,6 @@ export default class TodoList extends Vue {
   }
   .todo {
     width: 50%;
-    /*
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    */
     text-align: left;
     word-break : break-all;
   }

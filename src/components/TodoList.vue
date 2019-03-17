@@ -106,10 +106,13 @@
 
               <span v-if="val==='complete'"
                 class="complete-checkbox-span">
-                <b-form-checkbox
+                <label>
+                <input  
+                　type="checkbox"
                   v-model="todo.complete"
-                  @change="completed(todo)">
-                </b-form-checkbox>
+                  @change="completed(todo)"/>
+                終わったらチェック！
+                </label>
               </span>
               <span v-else-if="val==='delete'"
                 class="delete-button-span">
@@ -400,6 +403,7 @@ export default class TodoList extends Vue {
     -webkit-overflow-scrolling: touch;
   }
   .wrapper.attributes.data {
+    padding: 18px 0px;
     height: auto;
   }
   .mobile-title {
@@ -443,6 +447,8 @@ export default class TodoList extends Vue {
   .complete {
     display: flex;
     width: 200px;
+    height: 40px;
+    padding-top: 12px;
     text-align: left;
   }
   .complete-checkbox-span {
@@ -450,6 +456,8 @@ export default class TodoList extends Vue {
   }
   .delete {
     width: 200px;
+    height: 40px;
+    padding-top: 12px;
     text-align: left;
   }
   .delete-button {
